@@ -138,8 +138,8 @@ CREATE TABLE order_products (
 	id SERIAL PRIMARY KEY,
 	
 	sales INTEGER NOT NULL,
-	quantity INTEGER NOT NULL,
-	discount FLOAT NOT NULL,
+	quantity INTEGER NOT NULL CHECK(quantity > 0),
+	discount FLOAT NOT NULL CHECK(discount >= 0),
 	profit INTEGER NOT NULL,
 	shipping_cost INTEGER NOT NULL,
 
@@ -153,6 +153,7 @@ VALUES('2022-07-20', '2022-07-25', 1, 1, 1);
 
 INSERT INTO order_products("sales", "quantity", "discount", "profit", "shipping_cost", "order_id", "product_id") 
 VALUES(22198, 2, 0.0, 6215, 4077, 1, 1);
+
 
 
 
