@@ -96,6 +96,19 @@ INSERT INTO segments("name") values('test segment 1');
 INSERT INTO customers("name", "segment_id") values('test customer 1', 1);
 
 
+/* Ship modes */
+
+
+CREATE TABLE ship_modes (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) UNIQUE NOT NULL
+);
+
+/* Dane testowe */
+
+INSERT INTO ship_modes("name") values('test shipmode 1');
+
+
 
 
 
