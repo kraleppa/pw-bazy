@@ -43,7 +43,7 @@ INSERT INTO states("name", "country_id") values('test state 1', 1);
 INSERT INTO cities("name", "postal_code", "state_id") values('test city 1', '31-072', 1);
 
 
-/* Tabele związane z kategoriami */
+/* Tabele związane z produktami */
 
 
 CREATE TABLE categories (
@@ -59,9 +59,43 @@ CREATE TABLE subcategories (
    	category_id INTEGER NOT NULL REFERENCES categories(id)
 );
 
+CREATE TABLE products (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	
+   	subcategory_id INTEGER NOT NULL REFERENCES subcategories(id)
+);
+
 
 /* Dane testowe */
 
 INSERT INTO categories("name") values('test category 1');
 INSERT INTO subcategories("name", "category_id") values('test subcat 1', 1);
+INSERT INTO products("name", "subcategory_id") values('test product 1', 1);
+
+
+/* Tabele związane z klientami */
+
+
+CREATE TABLE segments (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE customers (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	
+   	segment_id INTEGER NOT NULL REFERENCES segments(id)
+);
+
+/* Dane testowe */
+
+INSERT INTO segments("name") values('test segment 1');
+INSERT INTO customers("name", "segment_id") values('test customer 1', 1);
+
+
+
+
 
