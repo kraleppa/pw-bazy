@@ -2,6 +2,8 @@
 
 This repository contains code from classes at WUT
 
+It was implemented for postgresql13
+
 Sorry for polish language in the comments :c
 
 ## Cool diagram of my cool database
