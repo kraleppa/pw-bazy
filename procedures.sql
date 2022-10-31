@@ -134,9 +134,7 @@ begin
 end
 $$;
 
-
 /* Funkcje związane z klientami */
-
 
 create or replace function create_segment(segment_name text)
 returns int
@@ -194,24 +192,140 @@ begin
 end
 $$;
 
+/* Procedury tworzące zamówienie */
 
-select create_ship_mode('DPD')
-
-create or replace PROCEDURE transaction_test1(com boolean)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-	perform create_product('cool', 'cat', 'asd');
+create or replace procedure create_order_product(params json, order_id int) 
+language plpgsql
+as $$
+declare
+	product_id int;
+begin
 	
-        IF com THEN
-            COMMIT;
-        ELSE
-            ROLLBACK;
-        END IF;
+	select create_product(
+		params->>'category',
+		params->>'subcategory',
+		params->>'name'
+	) into product_id;
 
-END;
+	insert into order_products (
+		sales,
+		quantity,
+		discount,
+		profit,
+		shipping_cost,
+		order_id,
+		product_id 
+	) values (
+		cast (params->>'sales' as integer),
+		cast (params->>'quantity' as integer),
+		cast (params->>'discount' as float),
+		cast (params->>'profit' as integer),
+		cast (params->>'shipping_cost' as integer),
+		order_id,
+		product_id 
+	);
+end;
 $$;
 
-call transaction_test1(true);
+
+create or replace procedure create_order(params json)
+language plpgsql
+as $$
+declare
+	city_id int;
+	customer_id int;
+	ship_mode_id int;
+	order_id int;
+
+	product_element record;
+begin
+	
+	select create_city(
+		params->>'market',
+		params->>'country',
+		params->>'state',
+		params->>'city',
+		params->>'postal_code'
+	) into city_id;
+	
+	select create_customer(
+		params->>'segment',
+		params->>'customer'
+	) into customer_id;
+
+	
+	select create_ship_mode(
+		params->>'ship_mode'
+	) into ship_mode_id;
+
+
+	insert into orders (
+		order_date, 
+		ship_date, 
+		city_id, 
+		customer_id, 
+		ship_mode_id
+	) values (
+	
+		to_date(params->>'order_date', 'YYYY-MM-DD'),
+		to_date(params->>'ship_date', 'YYYY-MM-DD'),
+		city_id,
+		customer_id,
+		ship_mode_id
+	) returning id into order_id;
+
+	for product_element in select * from json_array_elements(params->'products') 
+	loop	
+		call create_order_product(row_to_json(product_element)->'value', order_id);
+	end loop;
+	
+
+	commit;
+end;
+$$;
+
+call create_order('
+	{
+		"market": "DACH",
+		"country": "Germany",
+		"state": "Bayern",
+		"city": "Munchien",
+		"postal_code": "00-012",
+
+		"order_date": "2022-10-31",
+
+		"segment": "IT",
+		"customer": "Google",
+
+		"ship_mode": "DPD",
+
+		"products": [
+			{
+				"name": "Samsung Convoy 3",
+				"category": "Technology",
+				"subcategory": "Phones",
+				
+				"sales": 22198,
+				"quantity": 2,
+				"discount": 0.0,
+				"profit": 6215,
+				"shipping_cost": 4077
+			},
+			{
+				"name": "Nokia Smart Phone, with Caller ID",
+				"category": "Technology",
+				"subcategory": "Phones",
+				
+				"sales": 517517,
+				"quantity": 9,
+				"discount": 0.1,
+				"profit": 91997,
+				"shipping_cost": 91549
+			}
+
+		]
+	}
+');
+
 
 

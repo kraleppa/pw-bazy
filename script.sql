@@ -35,13 +35,6 @@ CREATE TABLE cities (
  	state_id INTEGER NOT NULL REFERENCES states(id)
 );
 
-/* Dane testowe */
-
-INSERT INTO markets("name") VALUES('test market 1');
-INSERT INTO countries("name", "market_id") VALUES('test country 1', 1);
-INSERT INTO states("name", "country_id") VALUES('test state 1', 1);
-INSERT INTO cities("name", "postal_code", "state_id") VALUES('test city 1', '31-072', 1);
-
 
 /* Tabele związane z produktami */
 
@@ -67,13 +60,6 @@ CREATE TABLE products (
 );
 
 
-/* Dane testowe */
-
-INSERT INTO categories("name") VALUES('test category 1');
-INSERT INTO subcategories("name", "category_id") VALUES('test subcat 1', 1);
-INSERT INTO products("name", "subcategory_id") VALUES('test product 1', 1);
-
-
 /* Tabele związane z klientami */
 
 
@@ -90,11 +76,6 @@ CREATE TABLE customers (
    	segment_id INTEGER NOT NULL REFERENCES segments(id)
 );
 
-/* Dane testowe */
-
-INSERT INTO segments("name") VALUES('test segment 1');
-INSERT INTO customers("name", "segment_id") VALUES('test customer 1', 1);
-
 
 /* Ship modes */
 
@@ -103,10 +84,6 @@ CREATE TABLE ship_modes (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255) UNIQUE NOT NULL
 );
-
-/* Dane testowe */
-
-INSERT INTO ship_modes("name") VALUES('test shipmode 1');
 
 
 /* Tabele związane z zamówieniami */
@@ -148,11 +125,6 @@ CREATE TABLE order_products (
    	product_id INTEGER NOT NULL REFERENCES products(id)
 );
 
-INSERT INTO orders("order_date", "ship_date", "city_id", "customer_id", "ship_mode_id") 
-VALUES('2022-07-20', '2022-07-25', 1, 1, 1);
-
-INSERT INTO order_products("sales", "quantity", "discount", "profit", "shipping_cost", "order_id", "product_id") 
-VALUES(22198, 2, 0.0, 6215, 4077, 1, 1);
 
 
 
