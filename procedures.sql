@@ -284,6 +284,8 @@ begin
 end;
 $$;
 
+/* Przykładowe wywołanie */
+
 call create_order('
 	{
 		"market": "DACH",
@@ -326,6 +328,7 @@ call create_order('
 		]
 	}
 ');
+
 
 
 
