@@ -1,4 +1,4 @@
-# Zaawansowane bazy danych PW II stopień
+# "Zaawansowane" bazy danych PW II stopień
 
 This repository contains code from classes at WUT
 
